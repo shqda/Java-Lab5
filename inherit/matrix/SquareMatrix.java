@@ -11,7 +11,6 @@ public class SquareMatrix extends Matrix {
         }
     }
 
-
     @Override
     public Matrix sum(final Matrix other) {
         return super.sum(other);

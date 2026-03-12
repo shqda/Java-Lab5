@@ -1,6 +1,6 @@
 package inherit.matrix;
 
-import inherit.exceptions.MatrixException;
+import inherit.exceptions.*;
 import java.util.Arrays;
 
 
@@ -24,13 +24,13 @@ public class Matrix {
     public int getCols() { return cols; }
     
 
-    private void checkBounds(int r, int c) throws MatrixException {
+    protected void checkBounds(int r, int c) throws BadMatrixSizesException {
         if (r < 0 || c < 0) {
-            throw new MatrixException("Index out of bounds: row and col must be > 0!\n");
+            throw new BadMatrixSizesException("Index out of bounds: row and col must be > 0!\n");
         }
 
         else if (r >= rows || c >= cols) {
-            throw new MatrixException("Index out of bounds: position [" + r + "][" + c + "]" +
+            throw new BadMatrixSizesException("Index out of bounds: position [" + r + "][" + c + "]" +
                                       "does not exist in " + rows + "x" + cols +" matrix.");
         }
     }
