@@ -5,13 +5,16 @@ import org.suai.lab3.matrix.*;
 
 public class Main {
     public static void main(String[] args) {
-        SparseMatrix sm = new SparseMatrix(10, 10);
-        sm.setElement(9, 1, 5);
-        sm.setElement(1, 1, 0);
-        sm.setElement(1, 1, 0);
-        sm.setElement(1, 1, 0);
-        sm.setElement(1, 1, 0);
-        sm.setElement(9, 1, 0);
-        System.out.println(sm);
+        SparseMatrix sm1 = new SparseMatrix(3, 3);
+        sm1.setElement(1, 1, 2);
+        sm1.setElement(1, 2, 2);
+
+        SparseMatrix sm2 = new SparseMatrix(3, 3);
+        sm2.setElement(1, 1, 2);
+        sm2.setElement(1, 2, 2);
+
+        System.out.println(sm1);
+        System.out.println(sm2);
+        System.out.println(sm2.sum(sm1));
     }
 }

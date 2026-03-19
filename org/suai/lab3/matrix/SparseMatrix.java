@@ -64,7 +64,33 @@ public class SparseMatrix implements Matrix {
 
     @Override
     public Matrix sum(Matrix other) throws MatrixException {
-        return null;
+        if (getRows() != other.getRows() || getCols() != other.getCols()) {
+            throw new MatrixException("Invalid matrix to sum: matrix's rows and cols must be the same\n");
+        }
+        Matrix result;
+
+        if (other instanceof SparseMatrix sm) {
+            result = new SparseMatrix(getRows(), getCols());
+
+            HashMap<MatrixElement.Position, Integer> map = new HashMap<>();
+            for (var el : this.data) map.put(el.getPos(), el.getValue());
+            for (var el : sm.data) map.merge(el.getPos(), el.getValue(), Integer::sum);
+
+            map.forEach((pos, val) -> {
+                if (val != 0) result.setElement(pos.getX(), pos.getY(), val);
+            });
+            return result;
+        }
+        else {
+            result = new UsualMatrix(getRows(), getCols());
+
+            for (int i = 0; i < other.getRows(); i++) {
+                for (int j = 0; j < other.getCols(); j++) {
+                    result.setElement(i, j, getElement(i,j) + other.getElement(i, j));
+                }
+            }
+        }
+        return result;
     }
 
     @Override
@@ -104,14 +130,12 @@ public class SparseMatrix implements Matrix {
         for (var el : data) {
             sb.append(el.toString()).append(System.lineSeparator());
         }
-        sb.append(System.lineSeparator());
-
         return sb.toString();
     }
 
     private static class MatrixElement {
-        public Position pos;
-        public int value;
+        private Position pos;
+        private int value;
 
         MatrixElement(int x, int y, int value) {
             pos = new Position(x, y);
@@ -140,8 +164,8 @@ public class SparseMatrix implements Matrix {
         }
 
         private static class Position {
-            int x;
-            int y;
+            private int x;
+            private int y;
 
             public Position(int x, int y) {
                 this.x = x;
@@ -165,15 +189,19 @@ public class SparseMatrix implements Matrix {
             }
 
             @Override
-            public int hashCode() {
-                int prime1 = 73856093;
-                int prime2 = 19349663;
-                return (x * prime1) ^ (y * prime2);
+            public String toString() {
+                return "(" + x + ", " + y + ')';
             }
 
             @Override
-            public String toString() {
-                return "(" + x + ", " + y + ')';
+            public boolean equals(Object o) {
+                if (!(o instanceof Position position)) return false;
+                return x == position.x && y == position.y;
+            }
+
+            @Override
+            public int hashCode() {
+                return Objects.hash(getX(), getY());
             }
         }
     }
