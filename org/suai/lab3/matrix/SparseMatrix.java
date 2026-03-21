@@ -6,13 +6,26 @@ import org.suai.lab3.exceptions.MatrixException;
 import java.util.*;
 
 public class SparseMatrix implements Matrix {
-    int rows;
-    int cols;
-    LinkedList<MatrixElement> data = new LinkedList<>();
+    protected int rows;
+    protected int cols;
+    private final LinkedList<MatrixElement> data = new LinkedList<>();
 
     public SparseMatrix(int rows, int cols) {
         this.rows = rows;
         this.cols = cols;
+    }
+
+    public SparseMatrix(Matrix other) {
+        if (other.getRows() != other.getCols()) throw new MatrixException("rows and cols must be the same");
+
+        rows = other.getRows();
+        cols = other.getCols();
+
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                setElement(i, j, other.getElement(i, j));
+            }
+        }
     }
 
     @Override
@@ -72,7 +85,7 @@ public class SparseMatrix implements Matrix {
         if (other instanceof SparseMatrix sm) {
             result = new SparseMatrix(getRows(), getCols());
 
-            HashMap<MatrixElement.Position, Integer> map = new HashMap<>();
+            Map<MatrixElement.Position, Integer> map = new HashMap<>();
             for (var el : this.data) map.put(el.getPos(), el.getValue());
             for (var el : sm.data) map.merge(el.getPos(), el.getValue(), Integer::sum);
 
@@ -95,7 +108,29 @@ public class SparseMatrix implements Matrix {
 
     @Override
     public Matrix product(Matrix other) throws MatrixException {
-        return null;
+        if (getCols() != other.getRows()) {
+            throw new MatrixException(
+                    "Incompatible matrix sizes: left matrix columns (" + getCols() +
+                    ") must match right matrix rows (" + other.getRows() + ")."
+            );
+        }
+        Matrix result = new UsualMatrix(getRows(), other.getCols());
+
+        for (int i = 0; i < getRows(); i++) {
+            for (int j = 0; j < other.getCols(); j++) {
+                int sumVal = 0;
+                for (int k = 0; k < getCols(); k++) {
+                    sumVal += getElement(i, k) * other.getElement(k, j);
+                }
+                result.setElement(i, j, sumVal);
+            }
+        }
+        return result;
+    }
+
+    @Override
+    public SparseMatrix copy() {
+        return new SparseMatrix(this);
     }
 
     @Override
@@ -104,7 +139,7 @@ public class SparseMatrix implements Matrix {
 
         if (!(o instanceof SparseMatrix other)) return false;
 
-        if (rows != other.rows || cols != other.cols || data.size() != other.data.size()) {
+        if (getRows() != other.getRows() || getCols() != other.getCols() || data.size() != other.data.size()) {
             return false;
         }
 
@@ -127,8 +162,15 @@ public class SparseMatrix implements Matrix {
     public String toString() {
         StringBuilder sb = new StringBuilder();
 
-        for (var el : data) {
-            sb.append(el.toString()).append(System.lineSeparator());
+        sb.append(getClass().getSimpleName()).append(System.lineSeparator());
+
+        for (int i = 0; i < rows; i++) {
+            sb.append("[ ");
+            for (int j = 0; j < cols; j++) {
+                sb.append(getElement(i, j));
+                if (j < cols - 1) sb.append(" ");
+            }
+            sb.append(" ]").append(System.lineSeparator());
         }
         return sb.toString();
     }

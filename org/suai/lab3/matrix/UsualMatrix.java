@@ -19,10 +19,14 @@ public class UsualMatrix implements Matrix {
         data = new int[rows][cols];
     }
 
-    public void fillMatrix(int val) {
+    public UsualMatrix(Matrix other) {
+        rows = other.getRows();
+        cols = other.getCols();
+        data = new int[rows][cols];
+
         for (int i = 0; i < rows; i++) {
             for (int j = 0; j < cols; j++) {
-                setElement(i, j, val);
+                data[i][j] = other.getElement(i, j);
             }
         }
     }
@@ -31,7 +35,26 @@ public class UsualMatrix implements Matrix {
     public int getRows() { return rows; }
     @Override
     public int getCols() { return cols; }
-    
+
+
+    @Override
+    public int getElement(int row, int column) {
+        checkBounds(row, column);
+        return data[row][column];
+    }
+
+
+    @Override
+    public void setElement(int row, int column, int value) throws MatrixException {
+        checkBounds(row, column);
+        data[row][column] = value;
+    }
+
+    @Override
+    public UsualMatrix copy() {
+        return new UsualMatrix(this);
+    }
+
 
     @Override
     public void checkBounds(int r, int c) throws BadMatrixSizesException {
@@ -45,20 +68,13 @@ public class UsualMatrix implements Matrix {
         }
     }
 
-
-    @Override
-    public int getElement(int row, int column) {
-        checkBounds(row, column);
-        return data[row][column];
-    }   
-    
-    
-    @Override
-    public void setElement(int row, int column, int value) throws MatrixException {
-        checkBounds(row, column);
-        data[row][column] = value;
+    public void fillMatrix(int val) {
+        for (int i = 0; i < getRows(); i++) {
+            for (int j = 0; j < getCols(); j++) {
+                setElement(i, j, val);
+            }
+        }
     }
-
 
     @Override
     public Matrix sum(Matrix other) throws MatrixException {
@@ -66,15 +82,15 @@ public class UsualMatrix implements Matrix {
             throw new MatrixException("Invalid matrix to sum: matrix's rows and cols must be the same\n");
         }
 
-        Matrix newM = new UsualMatrix(getRows(), getCols());
+        Matrix result = new UsualMatrix(getRows(), getCols());
         for (int i = 0; i < getRows(); i++) {
             for (int j = 0; j < getCols(); j++) {
                 int sum = getElement(i, j) + other.getElement(i, j);
-                newM.setElement(i, j, sum);
+                result.setElement(i, j, sum);
             }
         }
 
-        return newM;
+        return result;
     }
 
 
@@ -88,7 +104,7 @@ public class UsualMatrix implements Matrix {
             );
         }
 
-        Matrix newM = new UsualMatrix(getRows(), other.getCols());
+        Matrix result = new UsualMatrix(getRows(), other.getCols());
         
         for (int i = 0; i < getRows(); i++) {
             for (int j = 0; j < other.getCols(); j++) {
@@ -96,10 +112,10 @@ public class UsualMatrix implements Matrix {
                 for (int k = 0; k < getCols(); k++) {
                     sumVal += getElement(i, k) * other.getElement(k, j);
                 }
-                newM.setElement(i, j, sumVal);
+                result.setElement(i, j, sumVal);
             }
         }
-        return newM;
+        return result;
     }
 
 
@@ -116,6 +132,8 @@ public class UsualMatrix implements Matrix {
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
+
+        sb.append(getClass().getSimpleName()).append(System.lineSeparator());
 
         for (int i = 0; i < getRows(); i++) {
             sb.append("[ ");

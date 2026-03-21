@@ -14,6 +14,8 @@ public interface Matrix {
 
     void setElement(int row, int column, int value) throws BadMatrixSizesException;
 
+    Matrix copy();
+
     Matrix sum(Matrix other) throws MatrixException;
 
     Matrix product(Matrix other) throws MatrixException;
