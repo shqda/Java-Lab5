@@ -1,10 +1,24 @@
 package org.suai.lab3;
 
+import org.suai.lab3.graph.AdjacencyListGraph;
+import org.suai.lab3.graph.AdjencyMatrixGraph;
+import org.suai.lab3.graph.Graph;
 import org.suai.lab3.matrix.*;
+import org.suai.lab3.viz.GraphViz;
 
 //TODO: final
 
 public class Main {
+
+    public static void dfs(Graph g, int start) {
+        if (start < 0 || start >= g.getSize()) return;
+        System.out.println(System.lineSeparator() + "DFS for graph " + g.getClass().getSimpleName() + ":");
+
+        boolean[] visited = new boolean[g.getSize()];
+        dfsRec(g, start, visited);
+    }
+
+
     public static void main(String[] args) {
         System.out.println("Matrix usual1:");
         Matrix usual1 = MatrixGenerator.generateUsualMatrix(1000, 1000);
@@ -44,5 +58,44 @@ public class Main {
 
         System.out.println("usualProd == sparseProd == combineProd: " +
             (usualProd.equals(sparseProd) == usualProd.equals(combineProd)));
+
+
+        Graph g = new AdjencyMatrixGraph(5);
+        g.connect(4, 1);
+        g.connect(1, 2);
+        g.connect(1, 0);
+        g.connect(2, 3);
+
+        dfs(g, 4);
+        try {
+            GraphViz.toFile(g, "matrix_graph");
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+
+        g = new AdjacencyListGraph(5);
+        g.connect(4, 1);
+        g.connect(1, 2);
+        g.connect(1, 0);
+        g.connect(2, 3);
+
+        dfs(g, 4);
+        try {
+            GraphViz.toFile(g, "list_graph");
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
+    private static void dfsRec(Graph g, int v, boolean[] visited) {
+        visited[v] = true;
+
+        System.out.print(v + " ");
+
+        for (int to : g.getNeighbors(v)) {
+            if (!visited[to]) {
+                dfsRec(g, to, visited);
+            }
+        }
     }
 }

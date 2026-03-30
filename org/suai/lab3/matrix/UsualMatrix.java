@@ -26,7 +26,7 @@ public class UsualMatrix implements Matrix {
 
         for (int i = 0; i < rows; i++) {
             for (int j = 0; j < cols; j++) {
-                data[i][j] = other.getElement(i, j);
+                getData()[i][j] = other.getElement(i, j);
             }
         }
     }
@@ -40,14 +40,14 @@ public class UsualMatrix implements Matrix {
     @Override
     public int getElement(int row, int column) {
         checkBounds(row, column);
-        return data[row][column];
+        return getData()[row][column];
     }
 
 
     @Override
     public void setElement(int row, int column, int value) throws MatrixException {
         checkBounds(row, column);
-        data[row][column] = value;
+        getData()[row][column] = value;
     }
 
     @Override
@@ -125,7 +125,7 @@ public class UsualMatrix implements Matrix {
 
         if (!(obj instanceof UsualMatrix other)) return false;
 
-        return getRows() == other.getRows() && getCols() == other.getCols() && Arrays.deepEquals(data, other.data);
+        return getRows() == other.getRows() && getCols() == other.getCols() && Arrays.deepEquals(getData(), other.getData());
     }
 
 
@@ -143,5 +143,9 @@ public class UsualMatrix implements Matrix {
             sb.append("]\n");
         }
         return sb.toString();
+    }
+
+    public int[][] getData() {
+        return data;
     }
 }

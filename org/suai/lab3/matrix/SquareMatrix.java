@@ -9,7 +9,7 @@ public class SquareMatrix extends UsualMatrix {
         super(size, size);
 
         for (int i = 0; i < size; i++) {
-            data[i][i] = 1;
+            getData()[i][i] = 1;
         }
     }
 
@@ -20,7 +20,7 @@ public class SquareMatrix extends UsualMatrix {
 
         for (int i = 0; i < rows; i++) {
             for (int j = 0; j < cols; j++) {
-                data[i][j] = other.getElement(i, j);
+                getData()[i][j] = other.getElement(i, j);
             }
         }
     }
