@@ -2,13 +2,13 @@ package org.suai.lab3.graph;
 
 import org.suai.lab3.exceptions.MatrixException;
 import org.suai.lab3.matrix.SquareMatrix;
-import org.suai.lab3.matrix.UsualMatrix;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
-public class AdjencyMatrixGraph extends SquareMatrix implements Graph {
-    public AdjencyMatrixGraph(int size) throws MatrixException {
+public class AdjacencyMatrixGraph extends SquareMatrix implements Graph {
+    public AdjacencyMatrixGraph(int size) throws MatrixException {
         super(size);
     }
 
@@ -48,7 +48,23 @@ public class AdjencyMatrixGraph extends SquareMatrix implements Graph {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof AdjencyMatrixGraph)) return false;
-        return super.equals(o);
+        if (!(o instanceof AdjacencyMatrixGraph other)) return false;
+        return getSize() == other.getSize() && Arrays.deepEquals(getData(), other.getData());
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+
+        sb.append(System.lineSeparator()).append(getClass().getSimpleName()).append(System.lineSeparator());
+
+        for (int i = 0; i < getRows(); i++) {
+            sb.append("[ ");
+            for (int j = 0; j < getCols(); j++) {
+                sb.append(getElement(i, j)).append(" ");
+            }
+            sb.append("]\n");
+        }
+        return sb.toString();
     }
 }

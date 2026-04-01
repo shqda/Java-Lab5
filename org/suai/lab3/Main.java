@@ -1,10 +1,12 @@
 package org.suai.lab3;
 
 import org.suai.lab3.graph.AdjacencyListGraph;
-import org.suai.lab3.graph.AdjencyMatrixGraph;
+import org.suai.lab3.graph.AdjacencyMatrixGraph;
 import org.suai.lab3.graph.Graph;
 import org.suai.lab3.matrix.*;
 import org.suai.lab3.viz.GraphViz;
+
+import java.util.Arrays;
 
 //TODO: final
 
@@ -60,26 +62,40 @@ public class Main {
             (usualProd.equals(sparseProd) == usualProd.equals(combineProd)));
 
 
-        Graph g = new AdjencyMatrixGraph(5);
+        AdjacencyMatrixGraph g = new AdjacencyMatrixGraph(5);
         g.connect(4, 1);
         g.connect(1, 2);
         g.connect(1, 0);
         g.connect(2, 3);
 
+        AdjacencyMatrixGraph gCopy = new AdjacencyMatrixGraph(5);
+        gCopy.connect(4, 1);
+        gCopy.connect(1, 2);
+        gCopy.connect(1, 0);
+        gCopy.connect(2, 3);
+
+        System.out.println("g equals gCopy: " + g.equals(gCopy));
+
         dfs(g, 4);
+        System.out.println(g);
+
         try {
             GraphViz.toFile(g, "matrix_graph");
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
 
-        g = new AdjacencyListGraph(5);
-        g.connect(4, 1);
-        g.connect(1, 2);
-        g.connect(1, 0);
-        g.connect(2, 3);
+        AdjacencyListGraph g1 = new AdjacencyListGraph(5);
+        g1.connect(4, 1);
+        g1.connect(1, 2);
+        g1.connect(1, 0);
+        g1.connect(2, 3);
 
-        dfs(g, 4);
+        dfs(g1, 4);
+        System.out.println(g1);
+
+        System.out.println("g equals gCopy: " + g1.equals(gCopy));
+
         try {
             GraphViz.toFile(g, "list_graph");
         } catch (Exception e) {

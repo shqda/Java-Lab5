@@ -68,9 +68,16 @@ public class AdjacencyListGraph implements Graph {
 
     @Override
     public String toString() {
-        return "AdjacencyListGraph{" +
-                "data=" + Arrays.toString(getData()) +
-                ", size=" + getSize() +
-                '}';
+        StringBuilder sb = new StringBuilder();
+        sb.append(System.lineSeparator()).append("AdjacencyMatrixGraph").append(System.lineSeparator());
+
+        for (Set<Integer> list : data) {
+            sb.append("[ ");
+            for (int cell : list) {
+                sb.append(cell).append(" ");
+            }
+            sb.append("]").append(System.lineSeparator());
+        }
+        return sb.toString();
     }
 }
